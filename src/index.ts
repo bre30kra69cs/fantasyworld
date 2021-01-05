@@ -1,1 +1,3 @@
-console.log('Hello canvas!');
+import {main} from './game';
+
+main();
