@@ -1,0 +1,8 @@
+node_modules
+dist
+
+.eslintrc.js
+babel.config.js
+lint-staged.config.js
+prettier.config.js
+webpack.config.js
