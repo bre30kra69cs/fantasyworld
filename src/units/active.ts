@@ -2,7 +2,6 @@ import {IUnit} from '../engine/engine';
 import {ICanvas} from '../engine/canvas';
 import {Utils} from '../utils';
 import {SCALE_BASE} from '../consts';
-import {Point} from '../types';
 
 export type IActiveUnit = IUnit & {
   rotate(deg: number): void;
@@ -52,5 +51,5 @@ export class ActiveUnit extends Utils implements IActiveUnit {
     canvas.drawCircle(0, 0, this.config.scaleBase / 2, 'red');
   };
 
-  public rotate = (deg: number) => {};
+  public rotate = () => {};
 }
