@@ -1,32 +1,72 @@
-import {Engine, IEngine} from '../engine/engine';
+import {Engine, IEngine, IUnit} from '../engine/engine';
 import {Loop, ILoop} from '../engine/loop';
 import {Canvas, ICanvas} from '../engine/canvas';
-import {Base} from './base';
-import {Camera} from './camera';
+import {Base, IBase} from './base';
+import {Camera, ICamera} from './camera';
 import {Mesh} from './mesh';
+import {Utils} from '../utils';
+import {SCALE_BASE} from '../consts';
 
-export class Runner {
+export interface IScene {
+  prepare(): IUnit[];
+}
+
+export interface IRunner {
+  setScene(scene: IScene): void;
+  run(): void;
+}
+
+interface RunnerConfig {
+  mode: 'development' | 'production';
+  scaleBase: number;
+}
+
+const DEFAULT_RUNNER_CONFIG: RunnerConfig = {
+  mode: 'development',
+  scaleBase: SCALE_BASE,
+};
+
+export class Runner extends Utils implements IRunner {
+  private config: RunnerConfig;
   private engine: IEngine;
   private canvas: ICanvas;
   private loop: ILoop;
+  private base: IBase;
+  private camera: ICamera;
 
-  constructor() {
+  constructor(config?: Partial<RunnerConfig>) {
+    super();
+
+    const baseConfig = this.mergeConfig(DEFAULT_RUNNER_CONFIG, config);
+
+    this.config = baseConfig;
     this.canvas = new Canvas();
     this.engine = new Engine(this.canvas);
-    this.loop = new Loop(this.engine, {
-      tick: 500,
-      logging: false,
-    });
+    this.loop = new Loop(this.engine);
+    this.camera = new Camera();
+    this.base = new Base(this.camera);
+    this.engine.push(this.base);
   }
 
-  public run = () => {
-    const mesh = new Mesh();
-    const camera = new Camera();
-    const base = new Base(camera);
-    base.push(mesh);
-    this.engine.push(base);
+  public setScene = (scene: IScene) => {
+    const units = scene.prepare();
 
-    camera.listen();
+    for (const unit of units) {
+      this.base.push(unit);
+    }
+  };
+
+  public run = () => {
+    const {mode} = this.config;
+
+    if (mode === 'development') {
+      const mesh = new Mesh({
+        gap: this.config.scaleBase,
+      });
+      this.base.push(mesh);
+    }
+
+    this.camera.listen();
     this.loop.start();
   };
 }

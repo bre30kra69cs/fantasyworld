@@ -1,72 +1,53 @@
 import {IEngine} from './engine';
+import {Logger} from '../logger';
+import {Utils} from '../utils';
 
 export interface ILoop {
   start(): void;
 }
 
 interface LoopConfig {
-  tick: number;
-  ticksCount: number;
+  framesCount: number;
   logging: boolean;
 }
 
 const DEFAULT_LOOP_CONFIG: LoopConfig = {
-  tick: 500,
-  ticksCount: Infinity,
+  framesCount: Infinity,
   logging: false,
 };
 
-export class Loop implements ILoop {
+export class Loop extends Utils implements ILoop {
   private config: LoopConfig;
   private engine: IEngine;
-  private internalTickCounter = 0;
+  private frameCounter = 0;
 
   constructor(engine: IEngine, config?: Partial<LoopConfig>) {
-    const baseConfig = {...DEFAULT_LOOP_CONFIG, ...(config ?? {})};
+    super();
+
+    const baseConfig = this.mergeConfig(DEFAULT_LOOP_CONFIG, config);
 
     this.config = baseConfig;
     this.engine = engine;
   }
 
-  private incrementInternalTick = () => {
-    this.internalTickCounter += 1;
-  };
-
-  private getInternalTick = () => {
-    return this.internalTickCounter;
-  };
-
-  private getConfig = () => {
-    return this.config;
-  };
-
-  private getTick = () => {
-    return this.getConfig()['tick'];
-  };
-
-  private getTicksCount = () => {
-    return this.getConfig()['ticksCount'];
-  };
-
-  private getLogging = () => {
-    return this.getConfig()['logging'];
-  };
-
-  private getEngine = () => {
-    return this.engine;
-  };
-
-  private wait = () => {
-    const tick = this.getTick();
-
-    return new Promise((res) => {
-      setTimeout(res, tick);
-    });
+  private incrementFrameCounter = () => {
+    this.frameCounter += 1;
   };
 
   private iter = () => {
-    this.getEngine().render();
-    window.requestAnimationFrame(this.iter);
+    if (this.config.logging) {
+      Logger.loopFrame(this.frameCounter);
+    }
+
+    if (!Number.isFinite(this.config.framesCount)) {
+      this.engine.render();
+      this.incrementFrameCounter();
+      window.requestAnimationFrame(this.iter);
+    } else if (this.config.framesCount > this.frameCounter) {
+      this.engine.render();
+      this.incrementFrameCounter();
+      window.requestAnimationFrame(this.iter);
+    }
   };
 
   public start = () => {

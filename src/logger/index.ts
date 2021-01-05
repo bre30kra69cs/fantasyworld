@@ -1,5 +1,5 @@
 export class Logger {
-  static loopTick = (count: number) => {
-    console.log(`Loop tick #${count}`);
+  static loopFrame = (count: number) => {
+    console.log(`[loop] frame #${count}`);
   };
 }

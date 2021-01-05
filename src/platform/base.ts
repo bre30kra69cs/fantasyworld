@@ -2,7 +2,9 @@ import {IUnit, IUnitStorage} from '../engine/engine';
 import {ICanvas} from '../engine/canvas';
 import {ICamera} from './camera';
 
-export class Base implements IUnit, IUnitStorage {
+export type IBase = IUnit & IUnitStorage;
+
+export class Base implements IBase {
   private camera: ICamera;
   private units: IUnit[];
 
@@ -10,10 +12,6 @@ export class Base implements IUnit, IUnitStorage {
     this.camera = camera;
     this.units = units;
   }
-
-  public push = (unit: IUnit) => {
-    this.units.push(unit);
-  };
 
   private thinks = () => {
     const nextUnits = [];
@@ -44,5 +42,9 @@ export class Base implements IUnit, IUnitStorage {
     canvas.translate(x, y);
 
     this.paints(canvas);
+  };
+
+  public push = (unit: IUnit) => {
+    this.units.push(unit);
   };
 }

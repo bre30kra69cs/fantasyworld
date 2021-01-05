@@ -1,4 +1,5 @@
 import {Point} from '../types';
+import {Utils} from '../utils';
 
 export interface ICamera {
   listen(): void;
@@ -17,59 +18,38 @@ const DEFAULT_CAMERA_CONFIG: CameraConfig = {
   speed: 25,
 };
 
-export class Camera implements ICamera {
+export class Camera extends Utils implements ICamera {
   private x: number;
   private y: number;
   private speed: number;
 
   constructor(config?: Partial<CameraConfig>) {
-    const baseConfig = {...DEFAULT_CAMERA_CONFIG, ...(config ?? {})};
-    const {x, y, speed} = baseConfig;
+    super();
+
+    const {x, y, speed} = this.mergeConfig(DEFAULT_CAMERA_CONFIG, config);
 
     this.x = x;
     this.y = y;
     this.speed = speed;
   }
 
-  private setX = (x: number) => {
-    this.x = x;
-  };
-
-  private getX = () => {
-    return this.x;
-  };
-
-  private getY = () => {
-    return this.y;
-  };
-
-  private setY = (y: number) => {
-    this.y = y;
-  };
-
-  private getSpeed = () => {
-    return this.speed;
-  };
-
   public listen = () => {
-    const speed = this.getSpeed();
-
     document.addEventListener('keydown', (event) => {
       switch (event.key) {
         case 'ArrowUp': {
-          this.setY(this.getY() + speed);
+          this.y += this.speed;
           return;
         }
         case 'ArrowDown': {
-          this.setY(this.getY() - speed);
+          this.y -= this.speed;
           return;
         }
         case 'ArrowLeft': {
-          this.setX(this.getX() + speed);
+          this.x += this.speed;
           return;
         }
         case 'ArrowRight': {
-          this.setX(this.getX() - speed);
+          this.x -= this.speed;
           return;
         }
       }
@@ -78,8 +58,8 @@ export class Camera implements ICamera {
 
   public getCoords = () => {
     return {
-      x: this.getX(),
-      y: this.getY(),
+      x: this.x,
+      y: this.y,
     };
   };
 }
