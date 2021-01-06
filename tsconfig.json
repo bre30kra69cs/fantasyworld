@@ -6,7 +6,8 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "noEmit": true
+    "noEmit": true,
+    "resolveJsonModule": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]

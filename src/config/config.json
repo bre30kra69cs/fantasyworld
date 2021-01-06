@@ -1,0 +1,11 @@
+{
+  "core": {
+    "engine": {
+      "logging": false
+    },
+    "loop": {
+      "count": null,
+      "logging": false
+    }
+  }
+}
