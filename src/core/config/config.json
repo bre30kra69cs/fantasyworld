@@ -12,7 +12,7 @@
         "loop": {
           "finite": false,
           "logging": false,
-          "count": 100
+          "count": 10
         }
       }
     }

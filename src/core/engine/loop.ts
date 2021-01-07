@@ -1,6 +1,6 @@
-import {Config} from '../../config';
+import {Config} from '../config';
 import {Counter} from './couter';
-import {Logger} from '../../logger';
+import {Logger} from '../logger';
 
 export abstract class AElement {
   protected childrens: AElement[];

@@ -1,6 +1,6 @@
 import {ARender, AElement} from './loop';
-import {Config} from '../../config';
-import {Logger} from '../../logger';
+import {Config} from '../config';
+import {Logger} from '../logger';
 
 export class Render extends ARender {
   private iter = (element: AElement) => {

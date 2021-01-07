@@ -16,7 +16,7 @@ export class Operator extends AElement {
     const ctx = this.canvas.getContext();
     const point = this.camera.getPoint();
     ctx.save();
-    ctx.moveTo(point.x, point.y);
+    ctx.translate(point.x, point.y);
   };
 
   public unpaint = () => {

@@ -1,6 +1,6 @@
 import {Point} from './types';
 import {Event, AEvent, AListner, EventPayload} from './event';
-import {Config} from '../../config';
+import {Config} from '../config';
 
 export abstract class ACamera extends AListner {
   protected event: AEvent<'keydown'>;

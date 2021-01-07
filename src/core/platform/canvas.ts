@@ -1,5 +1,5 @@
 import {Size} from './types';
-import {Config} from '../../config';
+import {Config} from '../config';
 
 export abstract class ACanvas {
   public abstract getCanvas(): HTMLCanvasElement;
