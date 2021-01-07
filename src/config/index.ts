@@ -1,9 +1,15 @@
 import CONFIG from './config.json';
 
-export const config = () => CONFIG;
+export class Config {
+  static config = () => CONFIG;
 
-export const engineLogging = () => config().core.engine.logging;
+  static engineLogging = () => Config.config().structure.core.engine.render.logging;
 
-export const loopLogging = () => config().core.loop.logging;
+  static loopLogging = () => Config.config().structure.core.engine.loop.logging;
 
-export const loopCount = () => config().core.loop.count;
+  static loopCount = () => Config.config().structure.core.engine.loop.count;
+
+  static canvasId = () => Config.config().props.canvasId;
+
+  static cameraSpeed = () => Config.config().props.cameraSpeed;
+}

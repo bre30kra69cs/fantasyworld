@@ -1,11 +1,19 @@
 {
-  "core": {
-    "engine": {
-      "logging": false
-    },
-    "loop": {
-      "count": null,
-      "logging": false
+  "props": {
+    "canvasId": "root",
+    "cameraSpeed": 25
+  },
+  "structure": {
+    "core": {
+      "engine": {
+        "render": {
+          "logging": false
+        },
+        "loop": {
+          "count": null,
+          "logging": false
+        }
+      }
     }
   }
 }

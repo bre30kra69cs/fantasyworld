@@ -1,4 +1,4 @@
-import {Canvas, ACanvas} from './canvas';
+import {ACanvas} from './canvas';
 import {Engine, AEngine, AElement} from '../engine';
 import {Cleaner} from './cleaner';
 import {Resizer, AResizer} from './resizer';
@@ -11,8 +11,8 @@ export abstract class APlatform {
   protected engine: AEngine;
   protected camera: ACamera;
 
-  constructor(root: AElement) {
-    this.canvas = new Canvas();
+  constructor(root: AElement, canvas: ACanvas) {
+    this.canvas = canvas;
     this.camera = new Camera();
     this.resizer = new Resizer(this.canvas);
     const operator = new Operator([root], this.canvas, this.camera);

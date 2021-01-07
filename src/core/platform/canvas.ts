@@ -1,4 +1,5 @@
 import {Size} from './types';
+import {Config} from '../../config';
 
 export abstract class ACanvas {
   public abstract getCanvas(): HTMLCanvasElement;
@@ -16,7 +17,8 @@ export class Canvas extends ACanvas {
 
   constructor() {
     super();
-    this.canvas = document.getElementById('root') as HTMLCanvasElement;
+    const id = Config.canvasId();
+    this.canvas = document.getElementById(id) as HTMLCanvasElement;
     this.context = this.canvas.getContext('2d');
   }
 
