@@ -1,5 +1,5 @@
 export abstract class AElement {
-  protected childrens: AElement[] = [];
+  protected childrens: AElement[];
 
   constructor(childrens: AElement[]) {
     this.childrens = childrens;
@@ -35,10 +35,6 @@ export abstract class ALoop {
 }
 
 export class Loop extends ALoop {
-  constructor(render: ARender) {
-    super(render);
-  }
-
   private iter = () => {
     this.render.run();
     window.requestAnimationFrame(this.iter);

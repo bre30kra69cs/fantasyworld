@@ -1,7 +1,7 @@
 import {Loop, AElement, ALoop, ARender} from './loop';
 import {Render} from './render';
 
-abstract class AEngine {
+export abstract class AEngine {
   protected loop: ALoop;
   protected render: ARender;
 

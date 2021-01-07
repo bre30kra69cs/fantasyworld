@@ -1,10 +1,6 @@
 import {ARender, AElement} from './loop';
 
 export class Render extends ARender {
-  constructor(root: AElement) {
-    super(root);
-  }
-
   private iter = (element: AElement) => {
     element.prepaint();
     element.paint();
