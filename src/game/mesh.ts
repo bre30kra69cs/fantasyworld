@@ -12,7 +12,7 @@ export class Mesh extends AComponent {
   public getName = () => this.name;
 
   public render = () => {
-    return new ElementCreator([], {
+    return new ElementCreator('mesh', [], {
       paint: () => {
         const paint = this.bus.getPaint('mesh');
         paint.draw({x: 0, y: 0}, {x: 1000, y: 1000}, 50);

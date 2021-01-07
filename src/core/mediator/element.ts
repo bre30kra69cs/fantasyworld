@@ -15,8 +15,8 @@ export class ElementCreator extends AElement {
     unpaint: noop,
   };
 
-  constructor(childrens: AElement[], actions?: Actions) {
-    super(childrens);
+  constructor(name: string, childrens: AElement[], actions?: Actions) {
+    super(name, childrens);
     this.actions = {...this.actions, ...(actions ?? {})};
   }
 

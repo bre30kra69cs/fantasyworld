@@ -10,8 +10,9 @@
           "logging": false
         },
         "loop": {
-          "count": null,
-          "logging": false
+          "finite": false,
+          "logging": false,
+          "count": 100
         }
       }
     }

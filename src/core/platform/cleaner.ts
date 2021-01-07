@@ -5,7 +5,7 @@ export class Cleaner extends AElement {
   private canvas: ACanvas;
 
   constructor(childrens: AElement[], canvas: ACanvas) {
-    super(childrens);
+    super('cleaner', childrens);
     this.canvas = canvas;
   }
 

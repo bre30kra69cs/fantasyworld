@@ -1,9 +1,17 @@
+import {Config} from '../../config';
+import {Counter} from './couter';
+import {Logger} from '../../logger';
+
 export abstract class AElement {
   protected childrens: AElement[];
+  protected name: string;
 
-  constructor(childrens: AElement[]) {
+  constructor(name: string, childrens: AElement[]) {
     this.childrens = childrens;
+    this.name = name;
   }
+
+  public getName = () => this.name;
 
   public getChildrens = () => this.childrens;
 
@@ -35,8 +43,19 @@ export abstract class ALoop {
 }
 
 export class Loop extends ALoop {
+  private counter = new Counter(Config.loopCount());
+
   private iter = () => {
+    if (Config.loopFinite() && this.counter.isMaxed()) {
+      return;
+    }
+
+    if (Config.loopLogging()) {
+      Logger.loop(this.counter.getCount());
+    }
+
     this.render.run();
+    this.counter.increment();
     window.requestAnimationFrame(this.iter);
   };
 

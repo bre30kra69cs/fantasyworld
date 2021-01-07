@@ -7,7 +7,7 @@ export class Operator extends AElement {
   private camera: ACamera;
 
   constructor(childrens: AElement[], canvas: ACanvas, camera: ACamera) {
-    super(childrens);
+    super('operator', childrens);
     this.canvas = canvas;
     this.camera = camera;
   }
