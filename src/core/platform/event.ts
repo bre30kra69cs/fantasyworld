@@ -11,7 +11,7 @@ export abstract class AListner {
 }
 
 export abstract class AEvent<T extends EventName> extends AListner {
-  protected listners: FnListner<T>[];
+  protected listners: FnListner<T>[] = [];
   protected eventName: T;
 
   constructor(eventName: T) {
