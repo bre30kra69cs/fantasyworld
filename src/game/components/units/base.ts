@@ -1,4 +1,4 @@
-import {AComponent, ElementCreator, ABus} from '../../core';
+import {AComponent, ElementCreator, ABus} from '../../../core';
 
 export class BaseUnit extends AComponent {
   constructor(bus: ABus) {

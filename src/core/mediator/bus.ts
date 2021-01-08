@@ -1,6 +1,7 @@
 import {AElement} from '../engine';
 import {ACanvas} from '../platform';
 import {PaintsMap, LinePaint, MeshPaint, CirclePaint} from './paints';
+import {EllementsMap, lineElementFactory} from './elements';
 
 export interface ComponentRoot {
   new (bud: ABus): AComponent;
@@ -35,14 +36,21 @@ export abstract class ABus {
   public abstract getComponent(name: string): AComponent | undefined;
 
   public abstract getPaint<T extends keyof PaintsMap>(name: T): PaintsMap[T];
+
+  public abstract getElement<T extends keyof EllementsMap>(name: T): EllementsMap[T];
 }
 
 export class Bus extends ABus {
   private components: Record<string, AComponent> = {};
+
   private paints: PaintsMap = {
     line: new LinePaint(this.canvas),
     mesh: new MeshPaint(this.canvas),
     circle: new CirclePaint(this.canvas),
+  };
+
+  private elements: EllementsMap = {
+    line: lineElementFactory(this.canvas),
   };
 
   public setComponent = (component: AComponent) => {
@@ -57,6 +65,11 @@ export class Bus extends ABus {
 
   public getPaint = <T extends keyof PaintsMap>(name: T) => {
     const paint = this.paints[name];
+    return paint;
+  };
+
+  public getElement = <T extends keyof EllementsMap>(name: T) => {
+    const paint = this.elements[name];
     return paint;
   };
 }

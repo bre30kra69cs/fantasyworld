@@ -1,5 +1,5 @@
 import {AComponent, ElementCreator, named} from '../core';
-import {GoingUnit} from './units';
+import {GoingUnit} from './components/units';
 
 @named
 export class Mesh extends AComponent {
@@ -12,9 +12,7 @@ export class Mesh extends AComponent {
           const paint = this.bus.getPaint('mesh');
           paint.draw({x: 0, y: 0}, {x: 400, y: 400}, 50);
         },
-        unpaint: () => {
-          console.log(this.bus);
-        },
+        unpaint: () => {},
       },
     );
   };
