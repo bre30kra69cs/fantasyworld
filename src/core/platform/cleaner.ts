@@ -12,7 +12,7 @@ export class Cleaner extends AElement {
   public paint = () => {
     const ctx = this.canvas.getContext();
     const size = this.canvas.getSize();
-    ctx.globalCompositeOperation = 'destination-over';
+    ctx.globalCompositeOperation = 'source-over';
     ctx.clearRect(0, 0, size.w, size.h);
   };
 }

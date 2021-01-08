@@ -13,5 +13,7 @@ export class Config {
 
   static canvasId = (): string => Config.config().props.canvasId;
 
-  static cameraSpeed = (): number => Config.config().props.cameraSpeed;
+  static cameraSpeed = (): number => Config.config().props.camera.speed;
+
+  static cameraPoint = () => Config.config().props.camera.point;
 }

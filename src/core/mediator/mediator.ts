@@ -1,9 +1,5 @@
 import {Platform, APlatform, Canvas, ACanvas} from '../platform';
-import {Bus, ABus, AComponent} from './bus';
-
-interface ComponentRoot {
-  new (bud: ABus): AComponent;
-}
+import {Bus, ABus, ComponentRoot} from './bus';
 
 export abstract class AMediator {
   protected canvas: ACanvas;

@@ -1,15 +1,22 @@
 import {AElement} from '../engine';
 import {ACanvas} from '../platform';
-import {PaintsMap, LinePaint, MeshPaint} from './paints';
+import {PaintsMap, LinePaint, MeshPaint, CirclePaint} from './paints';
+
+export interface ComponentRoot {
+  new (bud: ABus): AComponent;
+}
 
 export abstract class AComponent {
   protected bus: ABus;
+  protected name: string;
 
-  constructor(bus: ABus) {
+  constructor(bus: ABus, name?: string) {
     this.bus = bus;
+    this.name = name;
+    bus.setComponent(this);
   }
 
-  public abstract getName(): string;
+  public getName = () => this.name;
 
   public abstract render(): AElement;
 }
@@ -35,6 +42,7 @@ export class Bus extends ABus {
   private paints: PaintsMap = {
     line: new LinePaint(this.canvas),
     mesh: new MeshPaint(this.canvas),
+    circle: new CirclePaint(this.canvas),
   };
 
   public setComponent = (component: AComponent) => {

@@ -1,7 +1,13 @@
 {
   "props": {
     "canvasId": "root",
-    "cameraSpeed": 25
+    "camera": {
+      "speed": 25,
+      "point": {
+        "x": -500,
+        "y": -100
+      }
+    }
   },
   "structure": {
     "core": {

@@ -4,7 +4,10 @@ import {Config} from '../config';
 
 export abstract class ACamera extends AListner {
   protected event: AEvent<'keydown'>;
-  protected point: Point = {x: 0, y: 0};
+  protected point: Point = {
+    x: -Config.cameraPoint().x,
+    y: -Config.cameraPoint().y,
+  };
   protected speed = Config.cameraSpeed();
 
   constructor() {
