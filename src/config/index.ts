@@ -1,16 +1,17 @@
 interface Config {
   mode: 'dev' | 'prod';
+  historyLen: number;
 }
 
 const createConfig = () => {
   const config: Config = {
     mode: 'dev',
+    historyLen: 100,
   };
 
   return {
-    mode: () => {
-      return config.mode;
-    },
+    mode: () => config.mode,
+    historyLen: () => config.historyLen,
   };
 };
 

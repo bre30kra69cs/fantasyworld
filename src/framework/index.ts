@@ -1,5 +1,5 @@
 import {engine, State, RerenderMap, RestateMap, Rerender, Restate} from '../engine';
-import {stateId} from '../utils';
+import {stateId, noop, tap} from '../utils';
 
 type CanvasContainer = HTMLCanvasElement;
 
@@ -23,9 +23,9 @@ type Model = (
 ) => {
   state: ModelState;
   childrens: Model[];
-  pipe?: (state: State) => State;
-  paint?: (state: State) => void;
-  unpaint?: (state: State) => void;
+  pipe: (state: State) => State;
+  paint: (state: State) => void;
+  unpaint: (state: State) => void;
 };
 
 type ModelCreatorPprops = (canvas: Canvas) => Partial<ReturnType<Model>>;
@@ -88,12 +88,18 @@ const parseModel = (root: Model, canvas: Canvas) => {
 export const createModel: ModelCreator = (model) => (canvas) => ({
   state: createState(),
   childrens: [],
+  pipe: tap,
+  paint: noop,
+  unpaint: noop,
   ...(model?.(canvas) ?? {}),
 });
 
 export const createModelFactory: ModelFactoryCreator = (model) => (childrens = []) => (canvas) => ({
   state: createState(),
   childrens,
+  pipe: tap,
+  paint: noop,
+  unpaint: noop,
   ...(model?.(canvas) ?? {}),
 });
 

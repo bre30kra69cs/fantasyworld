@@ -1,3 +1,6 @@
+import {clone, equal} from '../utils';
+import {config} from '../config';
+
 export type Point = {
   x: number;
   y: number;
@@ -16,13 +19,13 @@ export type Rerender = (state: State) => void;
 
 export type TypedRestate = {
   type: string;
-  pipe?: Restate;
+  pipe: Restate;
 };
 
 export type TypedRerender = {
   type: string;
-  paint?: Rerender;
-  unpaint?: Rerender;
+  paint: Rerender;
+  unpaint: Rerender;
 };
 
 export type RestateMap = Record<string, TypedRestate>;
@@ -74,8 +77,24 @@ const createCycle = (rerender: Rerender, restate: Restate, state: State) => {
     return stateHistory[currentIndex];
   };
 
+  const getLastState = () => {
+    return stateHistory[stateHistory.length - 1];
+  };
+
   const pushState = (state: State) => {
-    stateHistory.push(state);
+    const lastState = getLastState();
+
+    if (!equal(state, lastState)) {
+      if (config.historyLen() === stateHistory.length) {
+        stateHistory.shift();
+        decrementIndex();
+      }
+
+      stateHistory.push(state);
+      return true;
+    }
+
+    return false;
   };
 
   const setNextState = () => {
@@ -83,9 +102,12 @@ const createCycle = (rerender: Rerender, restate: Restate, state: State) => {
       incrementIndex();
     } else {
       const state = getState();
-      incrementIndex();
       const nextState = restate(state);
-      pushState(nextState);
+      const isPushed = pushState(nextState);
+
+      if (isPushed) {
+        incrementIndex();
+      }
     }
   };
 
@@ -126,18 +148,20 @@ export const engine = (restateMap: RestateMap, rerenderMap: RerenderMap, state: 
   const rerender = (root: State) => {
     const iter = (iterState: State) => {
       const iterRerender = rerenderMap[iterState.type];
-      iterRerender?.paint?.(iterState);
+      iterRerender.paint(iterState);
       iterState.childrens.forEach(iter);
-      iterRerender?.unpaint?.(iterState);
+      iterRerender.unpaint(iterState);
     };
 
     iter(root);
   };
 
-  const restate = (root: State) => {
+  const restate = (value: State) => {
+    const root = clone(value);
+
     const iter = (iterState: State) => {
       const iterRestate = restateMap[iterState.type];
-      const nextState = iterRestate?.pipe?.(iterState);
+      const nextState = iterRestate.pipe(iterState);
       const nextChildrens = iterState.childrens.map(iter);
       nextState && (nextState.childrens = nextChildrens);
       return nextState;
