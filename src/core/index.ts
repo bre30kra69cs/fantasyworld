@@ -1,3 +1,14 @@
-export {AElement} from './engine';
-export {Mediator, AMediator, ElementCreator, AComponent, ABus, named} from './mediator';
-export {Point, Size} from './platform';
+export type {
+  Scene,
+  Canvas,
+  Element,
+  RenderProps,
+  Render,
+  Resteter,
+  CanvasContainer,
+  CanvasContext,
+  Point,
+  Size,
+} from './platform';
+
+export {runScene} from './platform';

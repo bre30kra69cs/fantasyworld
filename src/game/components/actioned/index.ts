@@ -1,1 +1,0 @@
-export {AMovedComponent} from './moved';
