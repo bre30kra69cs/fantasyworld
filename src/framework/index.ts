@@ -23,9 +23,9 @@ type Model = (
 ) => {
   state: ModelState;
   childrens: Model[];
-  pipe: (state: State) => State;
-  paint: (state: State) => void;
-  unpaint: (state: State) => void;
+  pipe: Restate;
+  paint: Rerender;
+  unpaint: Rerender;
 };
 
 type ModelCreatorPprops = (canvas: Canvas) => Partial<ReturnType<Model>>;

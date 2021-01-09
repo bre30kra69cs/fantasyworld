@@ -1,6 +1,14 @@
 import {clone, equal} from '../utils';
 import {config} from '../config';
 
+export type Cycle = {
+  prev(): void;
+  next(): void;
+  start(): void;
+  stop(): void;
+  run(): void;
+};
+
 export type Point = {
   x: number;
   y: number;
@@ -44,7 +52,7 @@ const loop = (rerender: Rerender, restate: LoopRestate) => {
   window.requestAnimationFrame(iter);
 };
 
-const createCycle = (rerender: Rerender, restate: Restate, state: State) => {
+const createCycle = (rerender: Rerender, restate: Restate, state: State): Cycle => {
   let active = true;
   const stateHistory = [state];
   let currentIndex = 0;
@@ -87,7 +95,9 @@ const createCycle = (rerender: Rerender, restate: Restate, state: State) => {
     if (!equal(state, lastState)) {
       if (config.historyLen() === stateHistory.length) {
         stateHistory.shift();
-        decrementIndex();
+        if (currentIndex !== 0) {
+          decrementIndex();
+        }
       }
 
       stateHistory.push(state);
