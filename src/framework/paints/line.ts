@@ -1,18 +1,13 @@
-import {Canvas, Point} from '../../core';
+import {Point} from '../../engine';
+import {Canvas} from '../';
 
-interface Props {
-  from: Point;
-  to: Point;
-  color?: string;
-}
-
-export const createLinePaint = (canvas: Canvas) => (props: Props) => {
+export const createLinePaint = (canvas: Canvas) => (from: Point, to: Point, color?: string) => {
   const ctx = canvas.getContext();
   ctx.save();
   ctx.beginPath();
-  ctx.strokeStyle = props.color;
-  ctx.moveTo(props.from.x, props.from.y);
-  ctx.lineTo(props.to.x, props.to.y);
+  ctx.strokeStyle = color;
+  ctx.moveTo(from.x, from.y);
+  ctx.lineTo(to.x, to.y);
   ctx.stroke();
   ctx.closePath();
   ctx.restore();

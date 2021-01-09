@@ -1,13 +1,3 @@
-import {createGame} from './framework';
+import {game} from './game';
 
-const main = () => {
-  const game = createGame('root', {
-    elements: [],
-    restater: () => {},
-    render: () => {},
-  });
-
-  game.run();
-};
-
-main();
+game();
