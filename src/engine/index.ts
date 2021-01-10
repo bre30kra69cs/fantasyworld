@@ -7,6 +7,14 @@ export type Cycle = {
   start(): void;
   stop(): void;
   run(): void;
+  setRestate(restate: Restate): void;
+  setRerender(rerender: Rerender): void;
+  setState(state: State): void;
+};
+
+export type Engine = Omit<Cycle, 'setRestate' | 'setRerender'> & {
+  setRestate(restateMap: RestateMap): void;
+  setRerender(rerenderMap: RerenderMap): void;
 };
 
 export type Point = {
@@ -52,9 +60,11 @@ const loop = (rerender: Rerender, restate: LoopRestate) => {
   window.requestAnimationFrame(iter);
 };
 
-const createCycle = (rerender: Rerender, restate: Restate, state: State): Cycle => {
+const createCycle = (): Cycle => {
+  let rerender: Rerender;
+  let restate: Restate;
   let active = true;
-  const stateHistory = [state];
+  const stateHistory = [];
   let currentIndex = 0;
 
   const getPrevIndex = () => {
@@ -149,36 +159,71 @@ const createCycle = (rerender: Rerender, restate: Restate, state: State): Cycle 
       active = false;
     },
     run: () => {
+      if (!rerender) {
+        throw new Error('[Engine] run cycle without rerender');
+      }
+
+      if (!restate) {
+        throw new Error('[Engine] run cycle without restate');
+      }
+
+      if (stateHistory.length === 0) {
+        throw new Error('[Engine] run cycle without state');
+      }
+
       loop(rerender, loopRestate);
+    },
+    setRestate: (value: Restate) => {
+      restate = value;
+    },
+    setRerender: (value: Rerender) => {
+      rerender = value;
+    },
+    setState: (value: State) => {
+      if (stateHistory.length !== 0) {
+        throw new Error('[Engine] set cycle state after init');
+      }
+
+      stateHistory.push(value);
     },
   };
 };
 
-export const engine = (restateMap: RestateMap, rerenderMap: RerenderMap, state: State) => {
-  const rerender = (root: State) => {
-    const iter = (iterState: State) => {
-      const iterRerender = rerenderMap[iterState.type];
-      iterRerender.paint(iterState);
-      iterState.childrens.forEach(iter);
-      iterRerender.unpaint(iterState);
-    };
+export const createEngine = (): Engine => {
+  const cycle = createCycle();
 
-    iter(root);
+  return {
+    ...cycle,
+    setRestate: (restateMap: RestateMap) => {
+      const restate = (value: State) => {
+        const root = clone(value);
+
+        const iter = (iterState: State) => {
+          const iterRestate = restateMap[iterState.type];
+          const nextState = iterRestate.pipe(iterState);
+          const nextChildrens = iterState.childrens.map(iter);
+          nextState && (nextState.childrens = nextChildrens);
+          return nextState;
+        };
+
+        return iter(root);
+      };
+
+      cycle.setRestate(restate);
+    },
+    setRerender: (rerenderMap: RerenderMap) => {
+      const rerender = (root: State) => {
+        const iter = (iterState: State) => {
+          const iterRerender = rerenderMap[iterState.type];
+          iterRerender.paint(iterState);
+          iterState.childrens.forEach(iter);
+          iterRerender.unpaint(iterState);
+        };
+
+        iter(root);
+      };
+
+      cycle.setRerender(rerender);
+    },
   };
-
-  const restate = (value: State) => {
-    const root = clone(value);
-
-    const iter = (iterState: State) => {
-      const iterRestate = restateMap[iterState.type];
-      const nextState = iterRestate.pipe(iterState);
-      const nextChildrens = iterState.childrens.map(iter);
-      nextState && (nextState.childrens = nextChildrens);
-      return nextState;
-    };
-
-    return iter(root);
-  };
-
-  return createCycle(rerender, restate, state);
 };

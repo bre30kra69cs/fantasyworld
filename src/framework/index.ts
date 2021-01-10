@@ -1,4 +1,4 @@
-import {engine, State, RerenderMap, RestateMap, Rerender, Restate} from '../engine';
+import {createEngine, Engine, State, RerenderMap, RestateMap, Rerender, Restate} from '../engine';
 import {stateId, noop, tap} from '../utils';
 
 type CanvasContainer = HTMLCanvasElement;
@@ -20,6 +20,7 @@ type ModelState = Omit<State, 'childrens'>;
 
 type Model = (
   canvas: Canvas,
+  engine: Engine,
 ) => {
   state: ModelState;
   childrens: Model[];
@@ -28,7 +29,7 @@ type Model = (
   unpaint: Rerender;
 };
 
-type ModelCreatorPprops = (canvas: Canvas) => Partial<ReturnType<Model>>;
+type ModelCreatorPprops = (canvas: Canvas, engine: Engine) => Partial<ReturnType<Model>>;
 
 type ModelCreator = (props?: ModelCreatorPprops) => Model;
 
@@ -44,63 +45,87 @@ export const createState = (customState?: Partial<State>): State => {
   };
 };
 
-const parseModel = (root: Model, canvas: Canvas) => {
-  const rerenderMap: RerenderMap = {};
-  const restateMap: RestateMap = {};
+const createModelParser = () => {
+  let canvas: Canvas;
+  let engine: Engine;
 
-  const pushToRestateMap = (type: string, pipe?: Restate) => {
-    if (!restateMap[type]) {
-      restateMap[type] = {
-        type,
-        pipe,
+  return {
+    setCanvas: (value: Canvas) => {
+      canvas = value;
+    },
+    setEngine: (value: Engine) => {
+      engine = value;
+    },
+    run: (root: Model) => {
+      if (!canvas) {
+        throw new Error('[Framework] run parser without canvas');
+      }
+
+      if (!engine) {
+        throw new Error('[Framework] run parser without engine');
+      }
+
+      const rerenderMap: RerenderMap = {};
+      const restateMap: RestateMap = {};
+
+      const pushToRestateMap = (type: string, pipe?: Restate) => {
+        if (!restateMap[type]) {
+          restateMap[type] = {
+            type,
+            pipe,
+          };
+        }
       };
-    }
-  };
 
-  const pushToRerenderMap = (type: string, paint?: Rerender, unpaint?: Rerender) => {
-    if (!rerenderMap[type]) {
-      rerenderMap[type] = {
-        type,
-        paint,
-        unpaint,
+      const pushToRerenderMap = (type: string, paint?: Rerender, unpaint?: Rerender) => {
+        if (!rerenderMap[type]) {
+          rerenderMap[type] = {
+            type,
+            paint,
+            unpaint,
+          };
+        }
       };
-    }
-  };
 
-  const iter = (model: Model) => {
-    const res = model(canvas);
-    const {pipe, paint, unpaint} = res;
-    const modelChildrens = res.childrens;
-    const modelState = res.state;
-    const {type} = modelState;
-    pushToRestateMap(type, pipe);
-    pushToRerenderMap(type, paint, unpaint);
-    const state = createState(modelState);
-    const stateChildrens = modelChildrens.map(iter);
-    state.childrens = stateChildrens;
-    return state;
-  };
+      const iter = (model: Model) => {
+        const res = model(canvas, engine);
+        const {pipe, paint, unpaint} = res;
+        const modelChildrens = res.childrens;
+        const modelState = res.state;
+        const {type} = modelState;
+        pushToRestateMap(type, pipe);
+        pushToRerenderMap(type, paint, unpaint);
+        const state = createState(modelState);
+        const stateChildrens = modelChildrens.map(iter);
+        state.childrens = stateChildrens;
+        return state;
+      };
 
-  const state = iter(root);
-  return {restateMap, rerenderMap, state};
+      const state = iter(root);
+      return {restateMap, rerenderMap, state};
+    },
+  };
 };
 
-export const createModel: ModelCreator = (model) => (canvas) => ({
+export const createModel: ModelCreator = (model) => (canvas, engine) => ({
   state: createState(),
   childrens: [],
   pipe: tap,
   paint: noop,
   unpaint: noop,
-  ...(model?.(canvas) ?? {}),
+  ...(model?.(canvas, engine) ?? {}),
 });
 
-export const createModelFactory: ModelFactoryCreator = (model) => (childrens = []) => (canvas) => ({
+export const createModelFactory: ModelFactoryCreator = (model) => (childrens = []) => (
+  canvas,
+  engine,
+) => ({
   state: createState(),
   childrens,
   pipe: tap,
   paint: noop,
   unpaint: noop,
-  ...(model?.(canvas) ?? {}),
+  ...(model?.(canvas, engine) ?? {}),
 });
 
 const createCanvas = (id: string): Canvas => {
@@ -187,8 +212,15 @@ const createCamera = createModelFactory((canvas) => {
 
 export const framework = (id: string, model: Model) => {
   const canvas = createCanvas(id);
+  const engine = createEngine();
+  const parser = createModelParser();
+  parser.setCanvas(canvas);
+  parser.setEngine(engine);
   const camera = createCamera([model]);
   const cleaner = createCleaner([camera]);
-  const {restateMap, rerenderMap, state} = parseModel(cleaner, canvas);
-  return engine(restateMap, rerenderMap, state);
+  const {restateMap, rerenderMap, state} = parser.run(cleaner);
+  engine.setState(state);
+  engine.setRestate(restateMap);
+  engine.setRerender(rerenderMap);
+  return engine;
 };
