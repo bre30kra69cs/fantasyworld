@@ -1,11 +1,21 @@
-import {State, Rerender, Restate} from '../engine';
+import {State, Rerender, Restate, Point} from '../engine';
 
-type ModelState = Omit<State, 'childrens'>;
+export type FindProps = {
+  id?: string;
+  type?: string;
+};
+
+export type Meadiator = {
+  setState(state: State): void;
+  getState(findProps: FindProps): State | undefined;
+  toCanvasPoint(point: Point): Point;
+};
 
 export type Model = (
   canvas: Canvas,
+  mediator: Meadiator,
 ) => {
-  state: ModelState;
+  state: State;
   childrens: Model[];
   pipe: Restate;
   paint: Rerender;

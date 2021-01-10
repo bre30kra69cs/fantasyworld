@@ -4,6 +4,7 @@ import {equal} from '../utils';
 export type Point = {
   x: number;
   y: number;
+  reverse?: boolean;
 };
 
 export type State = {

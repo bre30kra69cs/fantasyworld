@@ -1,4 +1,4 @@
-import {createModelFactory, createState, degree} from '../utils';
+import {createModelFactory, createState} from '../utils';
 
 export const createRoter = createModelFactory((canvas) => {
   return {
@@ -6,7 +6,6 @@ export const createRoter = createModelFactory((canvas) => {
     paint: () => {
       const ctx = canvas.getContext();
       ctx.save();
-      ctx.rotate(degree(180));
     },
     unpaint: () => {
       const ctx = canvas.getContext();

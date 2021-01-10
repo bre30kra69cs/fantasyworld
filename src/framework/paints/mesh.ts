@@ -1,6 +1,6 @@
 import {createLinePaint} from './line';
 import {Point} from '../../engine';
-import {Canvas} from '../type';
+import {Canvas} from '../types';
 
 export const createMeshPaint = (canvas: Canvas) => (
   from: Point,

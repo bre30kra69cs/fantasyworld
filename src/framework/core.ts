@@ -1,5 +1,6 @@
 import {engine, RerenderMap, RestateMap, Rerender, Restate} from '../engine';
-import {Canvas, CanvasContainer, Model} from './type';
+import {Canvas, CanvasContainer, Meadiator, Model} from './types';
+import {createMediator} from './mediator';
 import {axios} from './models/axios';
 import {createCamera} from './models/camera';
 import {createRoter} from './models/roter';
@@ -7,7 +8,7 @@ import {createCleaner} from './models/cleaner';
 import {createState} from './utils';
 import {mode} from './dev';
 
-const parseModel = (root: Model, canvas: Canvas) => {
+const parseModel = (root: Model, canvas: Canvas, mediator: Meadiator) => {
   const rerenderMap: RerenderMap = {};
   const restateMap: RestateMap = {};
 
@@ -31,7 +32,7 @@ const parseModel = (root: Model, canvas: Canvas) => {
   };
 
   const iter = (model: Model) => {
-    const res = model(canvas);
+    const res = model(canvas, mediator);
     const {pipe, paint, unpaint} = res;
     const modelChildrens = res.childrens;
     const modelState = res.state;
@@ -79,10 +80,11 @@ const createCanvas = (id: string): Canvas => {
 
 export const framework = (id: string, model: Model) => {
   const canvas = createCanvas(id);
+  const mediator = createMediator();
   const roter = createRoter([model, axios]);
   const camera = createCamera([roter]);
   const cleaner = createCleaner([camera]);
-  const {restateMap, rerenderMap, state} = parseModel(cleaner, canvas);
+  const {restateMap, rerenderMap, state} = parseModel(cleaner, canvas, mediator);
   const cycle = engine(restateMap, rerenderMap, state);
   mode(cycle);
   return cycle;
