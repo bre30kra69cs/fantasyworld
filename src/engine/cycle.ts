@@ -10,7 +10,21 @@ export type Cycle = {
   getStatus(): boolean;
 };
 
-export const createCycle = (rerender: Rerender, restate: Restate, state: State): Cycle => {
+type GlobaslRestate = (state: State) => void;
+
+/**
+ *
+ * @param rerender - rerender entire state
+ * @param restate - restate localy
+ * @param globalRestate - restate globaly (must be mutation)
+ * @param state - initial state
+ */
+export const createCycle = (
+  rerender: Rerender,
+  restate: Restate,
+  globalRestate: GlobaslRestate,
+  state: State,
+): Cycle => {
   let active = true;
   const stateMangaer = createStateManager(restate, state);
 
@@ -19,7 +33,9 @@ export const createCycle = (rerender: Rerender, restate: Restate, state: State):
       stateMangaer.nextState();
     }
 
-    return stateMangaer.getState();
+    const nextState = stateMangaer.getState();
+    globalRestate(nextState);
+    return nextState;
   };
 
   return {

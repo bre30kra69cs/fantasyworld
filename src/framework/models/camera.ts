@@ -22,15 +22,18 @@ export const createCamera = createModelFactory((canvas) => {
     });
 
     return (state) => {
-      return {
-        ...state,
-        point: {x, y},
-      };
+      state.point.x = x;
+      state.point.y = y;
+
+      return state;
     };
   };
 
   return {
-    state: createState({type: 'camera'}),
+    state: createState({
+      type: 'camera',
+      isGlobal: true,
+    }),
     pipe: createPipe(),
     paint: (state) => {
       const ctx = canvas.getContext();

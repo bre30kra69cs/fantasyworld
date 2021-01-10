@@ -35,7 +35,7 @@ export const engine = (restateMap: RestateMap, rerenderMap: RerenderMap, state: 
 
     const iter = (iterState: State) => {
       const iterRestate = restateMap[iterState.type];
-      const nextState = iterRestate.pipe(iterState);
+      const nextState = iterState.isGlobal ? iterState : iterRestate.pipe(iterState);
       const nextChildrens = iterState.childrens.map(iter);
       nextState && (nextState.childrens = nextChildrens);
       return nextState;
@@ -44,5 +44,19 @@ export const engine = (restateMap: RestateMap, rerenderMap: RerenderMap, state: 
     return iter(root);
   };
 
-  return createCycle(rerender, restate, state);
+  const globalRestate = (root: State) => {
+    const iter = (iterState: State) => {
+      const iterRestate = restateMap[iterState.type];
+
+      if (iterState.isGlobal) {
+        iterRestate.pipe(iterState);
+      }
+
+      iterState.childrens.map(iter);
+    };
+
+    iter(root);
+  };
+
+  return createCycle(rerender, restate, globalRestate, state);
 };

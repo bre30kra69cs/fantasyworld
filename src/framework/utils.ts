@@ -22,6 +22,7 @@ export const createState = (customState?: Partial<State>): State => {
     type: 'noop',
     point: {x: 0, y: 0},
     childrens: [],
+    isGlobal: false,
     ...(customState ?? {}),
   };
 };

@@ -10,6 +10,7 @@ export type State = {
   id: string;
   type: string;
   point: Point;
+  isGlobal: boolean;
   childrens: State[];
 };
 

@@ -2,7 +2,7 @@ import {engine, RerenderMap, RestateMap, Rerender, Restate} from '../engine';
 import {Canvas, CanvasContainer, Model} from './type';
 import {axios} from './models/axios';
 import {createCamera} from './models/camera';
-import {createRoter} from './models/rotaer';
+import {createRoter} from './models/roter';
 import {createCleaner} from './models/cleaner';
 import {createState} from './utils';
 import {mode} from './dev';
