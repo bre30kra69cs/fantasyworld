@@ -1,11 +1,10 @@
-import {createModel, createState, framework} from '../framework';
-import {createLinePaint} from '../framework/paints/line';
+import {createMeshPaint, createModel, createState, framework} from '../framework';
 
 const mesh = createModel((canvas) => ({
   state: createState({type: 'mesh'}),
   paint: () => {
-    const linePaint = createLinePaint(canvas);
-    linePaint({x: 0, y: 0}, {x: 100, y: 100});
+    const meshPaint = createMeshPaint(canvas);
+    meshPaint({x: -1000, y: -1000}, {x: 1000, y: 1000}, 25);
   },
 }));
 

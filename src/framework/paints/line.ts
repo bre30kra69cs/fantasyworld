@@ -1,5 +1,5 @@
 import {Point} from '../../engine';
-import {Canvas} from '../';
+import {Canvas} from '../type';
 
 export const createLinePaint = (canvas: Canvas) => (from: Point, to: Point, color?: string) => {
   const ctx = canvas.getContext();

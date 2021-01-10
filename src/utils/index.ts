@@ -12,10 +12,6 @@ export const id = (len: number) => {
   return res;
 };
 
-export const stateId = () => {
-  return id(4);
-};
-
 export const omit = <T, K extends keyof T>(target: T, name: K): Omit<T, K> => {
   return Object.keys(target)
     .filter((key) => key !== name)

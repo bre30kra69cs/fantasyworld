@@ -7,6 +7,7 @@ export type Cycle = {
   start(): void;
   stop(): void;
   run(): void;
+  getStatus(): boolean;
 };
 
 export type Point = {
@@ -150,6 +151,9 @@ const createCycle = (rerender: Rerender, restate: Restate, state: State): Cycle 
     },
     run: () => {
       loop(rerender, loopRestate);
+    },
+    getStatus: () => {
+      return active;
     },
   };
 };
