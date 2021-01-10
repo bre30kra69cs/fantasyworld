@@ -11,7 +11,9 @@ export type State = {
   id: string;
   type: string;
   point: Point;
+  angle: number;
   isGlobal: boolean;
+  isAutopaint: boolean;
   childrens: State[];
 };
 

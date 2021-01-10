@@ -35,14 +35,5 @@ export const createCamera = createModelFactory((canvas) => {
       isGlobal: true,
     }),
     pipe: createPipe(),
-    paint: (state) => {
-      const ctx = canvas.getContext();
-      ctx.save();
-      ctx.translate(state.point.x, state.point.y);
-    },
-    unpaint: () => {
-      const ctx = canvas.getContext();
-      ctx.restore();
-    },
   };
 });

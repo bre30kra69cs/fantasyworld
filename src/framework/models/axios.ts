@@ -3,7 +3,10 @@ import {createRectPaint} from '../paints/rect';
 
 export const axios = createModel((canvas) => {
   return {
-    state: createState({type: 'axios'}),
+    state: createState({
+      type: 'axios',
+      isAutopaint: false,
+    }),
     paint: (state) => {
       const rectPaint = createRectPaint(canvas);
 

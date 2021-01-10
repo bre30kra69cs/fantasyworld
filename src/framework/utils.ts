@@ -2,7 +2,7 @@ import {State, Point} from '../engine';
 import {Model, Canvas} from './types';
 import {id, tap, noop} from '../utils';
 
-type ModelCreatorPprops = (...args: Parameters<Model>) => Partial<ReturnType<Model>>;
+export type ModelCreatorPprops = (...args: Parameters<Model>) => Partial<ReturnType<Model>>;
 
 type ModelCreator = (props?: ModelCreatorPprops) => Model;
 
@@ -24,7 +24,9 @@ export const createState = (customState?: Partial<State>): State => {
     type: 'noop',
     point: {x: 0, y: 0},
     childrens: [],
+    angle: 0,
     isGlobal: false,
+    isAutopaint: true,
     ...(customState ?? {}),
   };
 };
@@ -42,10 +44,32 @@ export const createModel: ModelCreator = (model) => (canvas, mediator) => {
   };
 
   const pipe = target.pipe;
+  const paint = target.paint;
+  const unpaint = target.unpaint;
 
   target.pipe = (state: State): State => {
     mediator.setState(state);
     return pipe(state);
+  };
+
+  target.paint = (state: State) => {
+    if (state.isAutopaint) {
+      const ctx = canvas.getContext();
+      ctx.save();
+      ctx.translate(state.point.x, state.point.y);
+      ctx.rotate(degree(state.angle));
+    }
+
+    paint(state);
+  };
+
+  target.unpaint = (state: State) => {
+    unpaint(state);
+
+    if (state.isAutopaint) {
+      const ctx = canvas.getContext();
+      ctx.restore();
+    }
   };
 
   mediator.setState(target.state);

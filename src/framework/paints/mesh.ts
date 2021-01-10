@@ -1,6 +1,5 @@
 import {createLinePaint} from './line';
 import {Point} from '../../engine';
-import {Canvas} from '../types';
 import {createPaint} from '../utils';
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
   color?: string;
 };
 
-export const createMeshPaint = createPaint((canvas: Canvas) => ({from, to, gap, color}: Props) => {
+export const createMeshPaint = createPaint((canvas) => ({from, to, gap, color}: Props) => {
   const linePaint = createLinePaint(canvas);
 
   for (let x = from.x; x <= to.x; x += gap) {

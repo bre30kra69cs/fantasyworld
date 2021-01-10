@@ -1,5 +1,4 @@
 import {Point} from '../../engine';
-import {Canvas} from '../types';
 import {createPaint} from '../utils';
 
 type Props = {
@@ -8,7 +7,7 @@ type Props = {
   color?: string;
 };
 
-export const createLinePaint = createPaint((canvas: Canvas) => ({from, to, color}: Props) => {
+export const createLinePaint = createPaint((canvas) => ({from, to, color}: Props) => {
   const ctx = canvas.getContext();
 
   ctx.strokeStyle = color;

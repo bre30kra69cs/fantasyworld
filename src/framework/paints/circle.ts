@@ -1,5 +1,4 @@
 import {Point} from '../../engine';
-import {Canvas} from '../types';
 import {createPaint} from '../utils';
 
 type Props = {
@@ -8,12 +7,10 @@ type Props = {
   color?: string;
 };
 
-export const createCirclePaint = createPaint(
-  (canvas: Canvas) => ({point, radius, color}: Props) => {
-    const ctx = canvas.getContext();
+export const createCirclePaint = createPaint((canvas) => ({point, radius, color}: Props) => {
+  const ctx = canvas.getContext();
 
-    ctx.fillStyle = color;
-    ctx.arc(point.x, point.y, radius, 0, 360);
-    ctx.fill();
-  },
-);
+  ctx.fillStyle = color;
+  ctx.arc(point.x, point.y, radius, 0, 360);
+  ctx.fill();
+});

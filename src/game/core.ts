@@ -1,9 +1,9 @@
 import {createMeshPaint, createModel, createState, framework} from '../framework';
-import {baseUnit} from './units/base';
+import {man} from './units/basics/man';
 
 const mesh = createModel((canvas) => ({
   state: createState({type: 'mesh'}),
-  childrens: [baseUnit],
+  childrens: [man],
   paint: () => {
     const meshPaint = createMeshPaint(canvas);
     meshPaint({
