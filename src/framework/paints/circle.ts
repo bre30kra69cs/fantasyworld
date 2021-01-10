@@ -3,19 +3,17 @@ import {Canvas} from '../types';
 import {createPaint} from '../utils';
 
 type Props = {
-  text: string;
   point: Point;
+  radius: number;
   color?: string;
-  size?: number;
 };
 
-export const createTextPaint = createPaint(
-  (canvas: Canvas) => ({text, point, color, size}: Props) => {
+export const createCirclePaint = createPaint(
+  (canvas: Canvas) => ({point, radius, color}: Props) => {
     const ctx = canvas.getContext();
 
     ctx.fillStyle = color;
-    ctx.font = `${size ?? 14}px serif`;
-    ctx.fillText(text, point.x, point.y);
+    ctx.arc(point.x, point.y, radius, 0, 360);
     ctx.fill();
   },
 );

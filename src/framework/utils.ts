@@ -1,5 +1,5 @@
 import {State, Point} from '../engine';
-import {Model} from './types';
+import {Model, Canvas} from './types';
 import {id, tap, noop} from '../utils';
 
 type ModelCreatorPprops = (...args: Parameters<Model>) => Partial<ReturnType<Model>>;
@@ -8,12 +8,14 @@ type ModelCreator = (props?: ModelCreatorPprops) => Model;
 
 type ModelFactoryCreator = (props?: ModelCreatorPprops) => (childrens: Model[]) => Model;
 
+type Paint<T> = (canvas: Canvas) => (props: T) => void;
+
 export const degree = (angle: number) => {
   return (Math.PI / 180) * angle;
 };
 
 export const stateId = () => {
-  return id(4);
+  return id(10);
 };
 
 export const createState = (customState?: Partial<State>): State => {
@@ -59,18 +61,6 @@ export const createModelFactory: ModelFactoryCreator = (model) => (childrens = [
     };
   });
 
-// export const createModelFactory: ModelFactoryCreator = (model) => (childrens = []) => (
-//   canvas,
-//   mediator,
-// ) => ({
-//   state: createState(),
-//   childrens,
-//   pipe: tap,
-//   paint: noop,
-//   unpaint: noop,
-//   ...(model?.(canvas, mediator) ?? {}),
-// });
-
 export const pointTo = (point: Point): Point => {
   return point.reverse
     ? point
@@ -89,4 +79,18 @@ export const unpointTo = (point: Point): Point => {
         reverse: false,
       }
     : point;
+};
+
+export const createPaint = <T>(paint: Paint<T>): Paint<T> => {
+  return (canvas) => (props) => {
+    const ctx = canvas.getContext();
+    ctx.save();
+    ctx.fillStyle = 'black';
+    ctx.strokeStyle = 'black';
+    ctx.font = '10px serif';
+    ctx.beginPath();
+    paint(canvas)(props);
+    ctx.closePath();
+    ctx.restore();
+  };
 };

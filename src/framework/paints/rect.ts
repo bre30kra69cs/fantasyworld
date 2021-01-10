@@ -1,11 +1,17 @@
 import {Point} from '../../engine';
 import {Canvas} from '../types';
+import {createPaint} from '../utils';
 
-export const createRectPaint = (canvas: Canvas) => (from: Point, to: Point, color?: string) => {
+type Props = {
+  from: Point;
+  to: Point;
+  color?: string;
+};
+
+export const createRectPaint = createPaint((canvas: Canvas) => ({from, to, color}: Props) => {
   const ctx = canvas.getContext();
-  ctx.save();
+
   ctx.fillStyle = color;
   ctx.fillRect(from.x, from.y, to.x - from.x, to.y - from.y);
   ctx.fill();
-  ctx.restore();
-};
+});
