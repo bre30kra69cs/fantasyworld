@@ -64,6 +64,7 @@ const createCycle = (): Cycle => {
   let rerender: Rerender;
   let restate: Restate;
   let active = true;
+  let runned = false;
   const stateHistory = [];
   let currentIndex = 0;
 
@@ -159,6 +160,10 @@ const createCycle = (): Cycle => {
       active = false;
     },
     run: () => {
+      if (runned) {
+        throw new Error('[Engine] cycle already runned');
+      }
+
       if (!rerender) {
         throw new Error('[Engine] run cycle without rerender');
       }
@@ -171,16 +176,25 @@ const createCycle = (): Cycle => {
         throw new Error('[Engine] run cycle without state');
       }
 
+      runned = true;
       loop(rerender, loopRestate);
     },
     setRestate: (value: Restate) => {
+      if (runned) {
+        throw new Error('[Engine] set cycle restate after init');
+      }
+
       restate = value;
     },
     setRerender: (value: Rerender) => {
+      if (runned) {
+        throw new Error('[Engine] set cycle rerender after init');
+      }
+
       rerender = value;
     },
     setState: (value: State) => {
-      if (stateHistory.length !== 0) {
+      if (runned) {
         throw new Error('[Engine] set cycle state after init');
       }
 

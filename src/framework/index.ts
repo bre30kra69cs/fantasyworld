@@ -172,18 +172,18 @@ const createCamera = createModelFactory((canvas) => {
   const createPipe = (): Restate => {
     let x = 0;
     let y = 0;
-    const speed = 25;
+    const keysSpeed = 25;
 
     window.addEventListener('keydown', ({key}) => {
       switch (key) {
         case 'ArrowDown':
-          return (y -= speed);
+          return (y -= keysSpeed);
         case 'ArrowUp':
-          return (y += speed);
+          return (y += keysSpeed);
         case 'ArrowRight':
-          return (x -= speed);
+          return (x -= keysSpeed);
         case 'ArrowLeft':
-          return (x += speed);
+          return (x += keysSpeed);
       }
     });
 
