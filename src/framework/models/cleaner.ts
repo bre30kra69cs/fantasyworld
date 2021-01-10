@@ -1,4 +1,4 @@
-import {createModelFactory, createState} from '../utilts';
+import {createModelFactory, createState} from '../utils';
 
 export const createCleaner = createModelFactory((canvas) => {
   return {

@@ -86,3 +86,7 @@ export const equal = <T>(left: T, right: T) => {
 
   return left === right;
 };
+
+export const merge = <T>(value1: T, value2: T) => {
+  return {...value1, ...value2};
+};

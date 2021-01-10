@@ -1,4 +1,4 @@
-import {createModelFactory, createState, degree} from '../utilts';
+import {createModelFactory, createState, degree} from '../utils';
 
 export const createRoter = createModelFactory((canvas) => {
   return {

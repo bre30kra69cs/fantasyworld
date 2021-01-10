@@ -4,7 +4,7 @@ import {axios} from './models/axios';
 import {createCamera} from './models/camera';
 import {createRoter} from './models/rotaer';
 import {createCleaner} from './models/cleaner';
-import {createState} from './utilts';
+import {createState} from './utils';
 import {mode} from './dev';
 
 const parseModel = (root: Model, canvas: Canvas) => {

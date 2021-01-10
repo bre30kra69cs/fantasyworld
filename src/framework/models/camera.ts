@@ -1,4 +1,4 @@
-import {createModelFactory, createState} from '../utilts';
+import {createModelFactory, createState} from '../utils';
 import {Restate} from '../../engine';
 
 export const createCamera = createModelFactory((canvas) => {

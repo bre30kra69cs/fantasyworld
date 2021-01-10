@@ -1,4 +1,4 @@
-import {createModel, createState} from '../utilts';
+import {createModel, createState} from '../utils';
 import {createRectPaint} from '../paints/rect';
 
 export const axios = createModel((canvas) => {
