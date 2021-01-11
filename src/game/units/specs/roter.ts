@@ -2,11 +2,21 @@ import {createSpec} from '../utils';
 import {State} from '../../../engine';
 
 const normalizeAngle = (angle: number) => {
-  return angle < 0 ? 360 + angle : angle;
+  const rounded = angle % 360;
+  return rounded < 0 ? 360 + rounded : rounded;
 };
 
 const selectDirection = (from: number, to: number) => {
-  return to - from > 0 ? 'right' : 'left';
+  const contr = normalizeAngle(from + 180);
+  const type = from < contr ? 'start' : 'end';
+
+  if (type === 'start') {
+    return from <= to && to <= contr ? 'right' : 'left';
+  }
+
+  if (type === 'end') {
+    return from >= to && to >= contr ? 'left' : 'right';
+  }
 };
 
 export const roter = createSpec(() => {
@@ -17,25 +27,25 @@ export const roter = createSpec(() => {
       _speed = speed;
     },
     rotate: (state: State, angle: number) => {
-      if (state.angle === angle) {
-        return;
-      }
-
       const normalAngle = normalizeAngle(angle);
       const normalStateAngle = normalizeAngle(state.angle);
 
-      if (Math.abs(normalAngle - normalStateAngle) < _speed) {
-        state.angle = angle;
+      if (normalStateAngle === normalAngle) {
+        return;
+      }
+
+      if (Math.abs(normalStateAngle - normalAngle) < _speed) {
+        state.angle = normalAngle;
       }
 
       const direaction = selectDirection(normalStateAngle, normalAngle);
 
       if (direaction === 'left') {
-        state.angle -= _speed;
+        state.angle = normalizeAngle(normalStateAngle - _speed);
       }
 
       if (direaction === 'right') {
-        state.angle += _speed;
+        state.angle = normalizeAngle(normalStateAngle + _speed);
       }
     },
   };

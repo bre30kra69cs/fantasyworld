@@ -12,7 +12,7 @@ export const man = heroFactory((canvas, mediator, specs) => {
     }),
     pipe: (state) => {
       mover.move(state, {x: 100, y: 100});
-      roter.rotate(state, 270);
+      roter.rotate(state, 550);
       return state;
     },
     paint: () => {
